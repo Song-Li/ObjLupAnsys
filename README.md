@@ -76,7 +76,7 @@ $ python3 ./ObjLupAnsys.py --nodejs -a --timeout 300 -q ./tests/packages/set-val
 The Web-based GUI includes a back-end server and a front-end client. To start the server, you can simply run:
 
 ```shell
-$ ./start_server.py
+$ python3 ./start_server.py
 ```
 Once the server is started, you can open your browser and visit the url [http://localhost:9870/](http://localhost:9870/) to access the Web-based GUI. The following steps show how to use our GUI:
 
