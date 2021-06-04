@@ -60,10 +60,11 @@ generate_graph.py [-h] [-p] [-t VUL_TYPE] [-P] [-m] [-q] [-s] [-a]
 Currently, for the packages that use CLASS, we need to use babel to convert them into ES5 format. To use babel, the prefix of babel path should be same to the prefix of input file. For example, if the babel path is /a/b/c, the input file should be under /a/b/c/. As for the input file, /a/b/c/index.js works for the input file, but ~/c/index.js does not.
 
 For example:
-```shell
-$ ./generate_opg.py -t os_command ./tests/chas_class/main.js --babel ./tests/chas_class/
+```console
+$ python3 ObjLupAnsys.py --install --list ./lists/fse_2021_52.list --run-env ~/
+$ python3 generate_list.py ~/packages/
+$ python3 ./ObjLupAnsys.py --timeout 300 --nodejs -a --list ./tools/result.list --parallel 16
 ```
-
 
 ## Examples
 
