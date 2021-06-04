@@ -42,16 +42,16 @@ Then a list file named **result.list** will be generated in the **tools** folder
 As described in the main [README.md](../../README.md), ObjLupAnsys supports running a list of packages. We will run the list by:
 
 ```shell
-$ python3 ObjLupAnsys.py --nodejs -a --timeout 300 -q --list ./lists/result.list
+$ python3 ObjLupAnsys.py --nodejs -a --timeout 300 -q --list ./tools/result.list
 ```
 
 If your device has multiple CPU cores, we will recommend the *--parallel PARALLEL* parameter to analyze the packages parallelly. The command will be like:
 
 ```shell
-$ python3 ObjLupAnsys.py --nodejs -a --timeout 300 -q --list ./lists/result.list --parallel 16
+$ python3 ObjLupAnsys.py --nodejs -a --timeout 300 -q --list ./tools/result.list --parallel 16
 ```
 
-Here, for normal modern computers, we recommend setting the timeout to be 300 seconds. You should adjust the number based on your computer. The detection result will be output to **succ.log** and **results.log**. The **succ.log** file includes a list of packages that detected prototype pollution vulnerabilities. The **results.log** file includes a list of timeout or not-detected packages. 
+Here, for normal modern computers, we recommend setting the timeout to be 100 to 300 seconds. You should adjust the number based on your computer. The detection result will be output to **succ.log** and **results.log**. The **succ.log** file includes a list of packages that detected prototype pollution vulnerabilities. The **results.log** file includes a list of timeout or not-detected packages. 
 
 Normally, based on the performance of the computer, you should be able to find 35 to 38 packages in the **succ.log** file, which means ObjLupAnsys successfully detects 30 to 38 packages. You can compare your **succ.log** file with the **lists/succ.res** and see which package is not detected. You can run the not detected packages independently by:
 
