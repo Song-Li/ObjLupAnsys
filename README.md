@@ -1,69 +1,73 @@
-OPGen
-=======
-
-OPGen is a tool that generates object property graph (OPG) and analyze
-vulnerabilities for JavaScript.
+# ObjLupAnsys
+ObjLupAnsys is a tool to detect prototype pollution vulnerabilities in Node.js packages. This project is written in Python and JavaScript and the source code is included in the repository. 
 
 ## Installation
-OPGen requires Python 3.7+ and Node.js 12+. To set up the environment, simply
-run `install.sh`.
+Please check out [INSTALL.md](https://github.com/Song-Li/ObjLupAnsys/blob/main/INSTALL.md) for the detailed instruction of the installation.
 
-## GUI
-### Start Server
-run 
-```shell
-$ ./start_server.py
-```
-to start the server. If using docker image, please use 
-```shell
-$ docker run -p 5903:5903 ImageID
-```
-### Use the GUI
-After you started the server, you can simply visit "http://address:5903" to see the GUI.
-1. Click "Choose zip file to upload" to pick the zip file of the package. Attention that the package should be directly zipped without any sub dirs
-2. Click Submit until a green icon appears
-3. Select the type of vulneralbility to detect
-4. Select the options. For large packages, we recommand checking "Module". For small packages, we recommand checking "Module" and "Run Exported Functions". For packages that use ES2015 and above features, we recommand checking "Use Babel"
-5. Click "Submit" and wait for the progress bar
-6. Once the Results are ready, you can click the graph to look into the code
-
-### Examples
-Inside the "./tests" folder, we put some pre-zipped packages like "thenify.zip". We also added the challenge package as "cha.zip" to the "./tests" folder. Please select "Module" and "Use Babel" to detect the Os Command and Path Traversal vulnerabilities.
-
-## Command line arguments
+## How to use
+ObjLupAnsys provides two interfaces--a command-line-based interface for experts and a Web-based interface for beginners or web users. 
+### Command-line 
 Use the following arugments to run the tool:
 
 ```bash
-generate_graph.py [-h] [-p] [-t VUL_TYPE] [-P] [-m] [-q] [-s] [-a]
-                  [-f FUNCTION_TIMEOUT] [-c CALL_LIMIT]
-                  [-e ENTRY_FUNC] [input_file]
+python3 ObjLupAnsys.py	[-h] [-p] [-m] [-q] [-s] [-a] [--timeout TIMEOUT] [-l LIST] [--install] 
+						[--max-rep MAX_REP] [--no-prioritized-funcs] [--nodejs] 
+						[--entrance-func ENTRANCE_FUNC] [--pre-timeout PRE_TIMEOUT]
+						[--max-file-stack MAX_FILE_STACK] [--skip-func SKIP_FUNC] [--run-env RUN_ENV] 
+						[--no-file-based] [--parallel PARALLEL] [input_file]
 ```
 
 | Argument | Description |
 | -------- | ----------- |
 | `input_file` | See subsection Input. |
-|  `-p, --print` | Print logs to console, instead of files. |
-| `-t VUL_TYPE, --vul-type VUL_TYPE` | Set the vulnerability type to be checked. (See the Vulterability Types section.) |
-| `-P, --prototype-pollution, --pp` | Shortcut for checking prototype pollution. |
-| `-m, --module` | Module mode. Indicate the input is a module, instead of a script. This implies -a. |
-| `--export LEVEL` | export the graph to Neo4J. The value can be 'light' or 'all'. Run import2neo4j.sh after the generation. | 
-| `-a, --run-all` | Run all exported functions in module.exports. By default, only main functions will be run. |
+| `-p, --print` | Print logs to console, instead of files. |
+| `-m, --module` | Module mode. Indicate the input is a module, instead of a script. |
 | `-q, --exit` | Exit the analysis immediately when vulnerability is found. Do not use this if you need a complete graph. |
-| `-s, --single-branch` | Single branch mode (or single execution). Do not execute multiple branches in parallel. |
-| `-f SEC, --function-timeout SEC` | Set the time limit when running all exported function, in seconds. (Defaults to no limit.) Do NOT use this parameter as it is very unstable.
-| `--run-env ENV_DIR` | set the running env location.|
-| `--babel CONVERT_DIR` | set the dir to convert using babel.|
-| `-c CALL_LIMIT, --call-limit CALL_LIMIT` | Set the how many times at most the same call statement can appear in the caller stack. (Defaults to 3.) |
-| `-e ENTRY_FUNC, --entry-func ENTRY_FUNC` | Mannualy set the entry point function. Use this parameter only if you know which function to start the analysis with. This only affects the input module, i.e., dependent packages will not be affected. |
+| `-s, --single-branch` | Single branch mode (or single execution). If set, ObjLupAnsys will disable the branch-sensitive mode. |
+| `-a, --run-all` | Run all exported functions in module.exports of **all** analyzed files even if the file is not the entrance file.|
+| `--timeout TIMEOUT`| The timeout(in seconds) of running a single module for one time. (Optimizations may run a module multiple times. This is the timeout for a single run.)|
+| `-l, --list LIST`| Run a list of files/packages. Each line of the file contains the path to a file/package. |
+| `--install`| Download the source code of a list of packages to the --run-env location. |
+| `--max-rep MAX_REP`| If set, every function can only exsits in the call stack for at most MAX_REP times. (To prevent too many levels of recursive calls)| 
+| `--no-prioritized-funcs`| If set, ObjLupAnsys will not start from the prioritized functions. |
+| `--nodejs`| Node.js mode. Indicate the input is a Node.js package. |
+| `--entrance-func ENTRANCE_FUNC`| If set, ObjLupAnsys will analyse the ENTRANCE_FUNC before analyzing the package. |
+| `--pre-timeout PRE_TIMEOUT`| The timeout(in seconds) for preparing the environment before running the prioritized functions. Defaults to 30.|
+| `--max-file-stack MAX_FILE_STACK`| The max depth of the required file stack. |
+| `--skip-func SKIP_FUNC`| Skip a list of functions, separated by "," .|
+| `--run-env ENV_DIR` | Set the running environment location.|
+| `--no-file-based`| Only detect the vulnerabilities that can be directly accessed from the main entrance of the package. |
+| `--parallel PARALLEL`| Run a list of packages parallelly in PARALLEL threads. Only works together with --list argument. |
 
-## Attention
-Currently, for the packages that use CLASS, we need to use babel to convert them into ES5 format. To use babel, the prefix of babel path should be same to the prefix of input file. For example, if the babel path is /a/b/c, the input file should be under /a/b/c/. As for the input file, /a/b/c/index.js works for the input file, but ~/c/index.js does not.
+Here is an example to show how to use our command-line based tool:
+
+```shell
+$ python3 ./ObjLupAnsys.py --nodejs -a ./tests/packages/set-value
+```
+Once finished, the tool will output the detecting result, and if any vulnerability is found, it will also output the location of the vulnerability and the attack path.
+### Web-based GUI
+The Web-based GUI includes a back-end server and a front-end client. To start the server, you can simply run:
+
+```shell
+$ ./start_server.py
+```
+Once the server is started, you can open your browser and visit the url [http://localhost:9870/](http://localhost:9870/) to access the Web-based GUI. The following steps show how to use our GUI:
+
+1. Click "Choose zip file to upload" to pick the zip file of the package. Note that the package should be directly zipped without any sub-folders
+2. Click Submit until a green icon appears, which means the zip file is successfully uploaded
+3. Select the options. For large packages, we recommend checking "Module". For small packages, we recommend checking "Module" and "Run Exported Functions". For packages that use ES2015 and above features, we recommend checking "Use Babel"
+4. Click "Submit" and wait for the progress bar to finish
+5. Once the Results are ready, you can click the components of the graph. We will grep the related source code from the server for you to check.
+
+# Artifacts Available
+Our code is stored at GitHub. The link to the repository is [https://github.com/Song-Li/ObjLupAnsys](https://github.com/Song-Li/ObjLupAnsys). The source code is released with the [GPL 2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) license.
 
 For example:
-```shell
-$ ./generate_opg.py -t os_command ./tests/chas_class/main.js --babel ./tests/chas_class/
+```console
+$ python3 ObjLupAnsys.py --install --list ./lists/fse_2021_52.list --run-env ~/
+$ python3 generate_list.py ~/packages/
+$ python3 ./ObjLupAnsys.py --timeout 300 --nodejs -a --list ./tools/result.list --parallel 16
 ```
-
 
 ## Examples
 
