@@ -20,7 +20,7 @@ python3 ObjLupAnsys.py	[-h] [-p] [-m] [-q] [-s] [-a] [--timeout TIMEOUT] [-l LIS
 
 | Argument | Description |
 | -------- | ----------- |
-| `input_file` | See subsection Input. |
+| `input_file` | The path to the input file. It can be a Node.js package directory or a JavaScript file |
 | `-p, --print` | Print logs to console, instead of files. |
 | `-m, --module` | Module mode. Indicate the input is a module, instead of a script. |
 | `-q, --exit` | Exit the analysis immediately when vulnerability is found. Do not use this if you need a complete graph. |
