@@ -197,11 +197,11 @@ def vul_checking(G, pathes, vul_type):
     return success_pathes
 
 def print_success_pathes(G, success_pathes, color=None):
-    title = "Polluted key data flow"
+    title = "Dataflow of Assigned Value"
     sty_color = sty.fg.li_green
     if color == '#f00':
         sty_color = sty.fg.li_red
-        title = "Polluted value data flow"
+        title = "Dataflow of Object Property"
     elif color == '#00f':
         title = "Polluted Built-in Prototype"
         sty_color = sty.fg.li_blue
