@@ -12,10 +12,10 @@ Use the following arugments to run the tool:
 
 ```bash
 python3 ObjLupAnsys.py	[-h] [-p] [-m] [-q] [-s] [-a] [--timeout TIMEOUT] [-l LIST] [--install] 
-						[--max-rep MAX_REP] [--no-prioritized-funcs] [--nodejs] 
-						[--entrance-func ENTRANCE_FUNC] [--pre-timeout PRE_TIMEOUT]
-						[--max-file-stack MAX_FILE_STACK] [--skip-func SKIP_FUNC] [--run-env RUN_ENV] 
-						[--no-file-based] [--parallel PARALLEL] [input_file]
+		[--max-rep MAX_REP] [--no-prioritized-funcs] [--nodejs] 
+		[--entrance-func ENTRANCE_FUNC] [--pre-timeout PRE_TIMEOUT]
+		[--max-file-stack MAX_FILE_STACK] [--skip-func SKIP_FUNC] [--run-env RUN_ENV] 
+		[--no-file-based] [--parallel PARALLEL] [input_file]
 ```
 
 | Argument | Description |
