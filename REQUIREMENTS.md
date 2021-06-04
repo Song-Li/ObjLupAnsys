@@ -11,7 +11,7 @@ Here we give a list of recommended hardware:
 ## Software requirements
 Here we list the required software:
 
-- Ubuntu 20.04 or 18.04. (18.04 should be supported by not tested)
+- Ubuntu 20.04 or 18.04. (18.04 should be supported but not tested)
 - Python 3.7 and above (check by *python3 --version*)
 - Node.js version v14.13.1 and above (check by *node --version*)
 - npm version 6.14.8 and above (check by *npm --version*)
