@@ -1,6 +1,17 @@
 # ObjLupAnsys
 ObjLupAnsys is a tool to detect prototype pollution vulnerabilities in Node.js packages. This project is written in Python and JavaScript and the source code is included in the repository. 
 
+## Parper and authors
+
+Paper: **Detecting Node.js Prototype Pollution Vulnerabilities via Object Lookup Analysis**
+
+Authors:
+
+- Song Li	<lsong18@jhu.edu>
+- Mingqing Kang <mkang31@jhu.edu>
+- Jianwei Hou <houjianwei@ruc.edu.cn>
+- Yinzhi Cao <yinzhi.cao@jhu.edu>
+
 ## Installation
 Please check out [INSTALL.md](https://github.com/Song-Li/ObjLupAnsys/blob/main/INSTALL.md) for the detailed instruction of the installation.
 
