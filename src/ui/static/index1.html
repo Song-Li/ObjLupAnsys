@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>OPGen</title>
+    <link href="./css/style.css" rel="stylesheet" />
+    <meta charset=utf-8 />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/cytoscape.min.js"></script>
+    <script src="./js/libs.js"></script>
+	</head>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		.container {
+			position: fixed;
+			display: flex;
+			width: 100%;
+			min-height: 100%;
+		}
+		.container-item-left {
+			flex: 40%;
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+		}
+		.container-item-right {
+			flex: 60%;
+			padding: 10px;
+		}
+		.form-container {
+			flex: 20%;
+			padding: 10px;
+		}
+		.form-item {
+			padding: 5px;
+		}
+		.log-container {
+			flex: 80%;
+			padding: 5px;
+			display: flex;
+			flex-direction: column;
+		}
+		.log-title {
+			flex: 5%;
+		}
+		.log-display {
+			flex: 95%;
+			border: 2px solid;
+			border-radius: 3px;
+			padding: 3px;
+			margin-bottom: 5px;
+		}
+		.result-container {
+			padding: 5px;
+			display: flex;
+			flex-direction: column;
+			height:100%;
+		}
+		.result-title {
+			flex: 4%;
+		}
+		.result-display {
+			flex: 96%;
+			border: 2px solid;
+			border-radius: 3px;
+			padding: 3px;
+			margin-bottom: 5px;
+		}
+		.btn {
+			padding: 5px;
+			margin-right: 5px;
+		}
+		label {
+			cursor: pointer;
+			margin-right: 5px;
+		}
+		input[type="radio"] {
+			cursor: pointer;
+			margin-right: 3px;
+		}
+		input[type="checkbox"]{
+			cursor: pointer;
+			margin-right: 3px;
+		}
+	</style>
+	<body>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+		<div class="container">
+			<div class="container-item-left">
+				<div class="form-container">
+          <form id="uploadfile" method="post" enctype="multipart/form-data" target="dummyframe">
+            <fieldset>
+              <label for="file">Choose zip file to upload</label>
+              <input type="file" id="file" name="file">
+            </fieldset>
+            <fieldset>
+              <input type="submit" onclick="upload_file()"/>
+            </fieldset>
+          </form>
+          <form id="options">
+            <div class="form-item">
+              <input type="radio" id="oc" name="vul_type" value="os_command">
+              <label for="a">Command Injection</label>
+              <input type="radio" id="ipt" name="vul_type" value="ipt">
+              <label for="b">Internal Property Pollution</label>
+              <input type="radio" id="pt" name="vul_type" value="path_traversal">
+              <label for="c">Path Traversal</label>
+            </div>
+            <div class="form-item">
+              <input type="checkbox" id="module" name="module" value="module">
+              <label for="d">Module</label>
+              <input type="checkbox" id="e" name="gc" value="gc">
+              <label for="e">Garbage Collector</label>
+              <input type="checkbox" id="f" name="exit_when_found" value="1">
+              <label for="f">Exit When Detected</label>
+            </div>
+          </form>
+          <div class="form-item">
+            <button class="btn" id="submit" onclick="start_check()">Submit</button>
+            <button class="btn" id="clear">Clear</button>
+					</div>
+				</div>
+				<div class="log-container">
+					<div class="log-title">Realtime Log:</div>
+					<div class="log-display">hi</div>
+				</div>
+			</div>
+			<div class="container-item-right">
+				<div class="result-container">
+					<div class="result-title">Results:</div>
+					<div id="cy" class="result-display"></div>
+				</div>
+			</div>
+		</div>
+    <script src="./js/code.js"></script>
+	</body>
+
+</html>

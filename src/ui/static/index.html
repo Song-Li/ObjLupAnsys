@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>OPGen</title>
+	    <link href="./css/style.css" rel="stylesheet" />
+	    <meta charset=utf-8 />
+	    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+	    <script src="./js/jquery.min.js"></script>
+	    <script src="./js/cytoscape.min.js"></script>
+	    <script src="./js/libs.js"></script>
+      <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style>
+    #editor1 {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: "Verdana";
+    }
+
+    /* basic positioning */
+    .legend { list-style: none; }
+    .legend li { float: left; margin-right: 10px; }
+    .legend span { border: 0px solid #ccc; float: left; width: 50px; height: 2px; margin: 6px; }
+    /* your colors */
+    .legend .blue{ background-color: #00f; }
+    .legend .red{ background-color: #f00; }
+    .legend .green{ background-color: #0f0; }
+
+    .myMarker {
+      position:absolute;
+      background:rgba(200,200,100,0.5);
+      z-index:20
+    }
+    .container {
+      position: fixed;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 30px;
+    }
+    .container-item-left {
+      flex: 45%;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .container-item-right {
+      flex: 55%;
+      padding-left: 10px;
+    }
+    .form-container {
+      flex: 20%;
+      padding: 5px;
+      font-size: 12px;
+    }
+    .form-item {
+      padding: 5px;
+		}
+		#show-filename {
+			margin-right: 15px;
+		}
+		.editor-container {
+			flex: 80%;
+			padding: 5px;
+			display: flex;
+			flex-direction: column;
+		}
+		.editor-title {
+			flex: 5%;
+			font-size: 18px;
+			margin-bottom: 5px;
+			padding-left: 2px;
+		}
+		.editor-display {
+			flex: 95%;
+			border: 2px solid grey;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 5px;
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+			font-size: 15px;
+		}
+		.result-container {
+			padding: 5px;
+			display: flex;
+			flex-direction: column;
+			height:100%;
+		}
+		.result-title {
+			flex: 4%;
+			font-size: 18px;
+			margin-bottom: 5px;
+			padding-left: 2px;
+		}
+		.result-display {
+			flex: 96%;
+			border: 2px solid grey;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 5px;
+			background: #f0f2f7;
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+			font-size: 15px;
+		}
+    .img {
+      max-width: 30px;
+      max-height: 30px;
+    }
+		.btn {
+			cursor: pointer;
+			padding: 10px 20px 10px;
+			margin-right: 10px;
+			border: 1px solid grey;
+			border-radius: 5px;
+			background-color: #e3e3e3;
+			font-size: 13px;
+		}
+		.btn:hover {
+			background-color: #d6d6d6;
+		}
+		.btn:active {
+			background-color: #d6d6d6;
+			transform: translateY(3px);
+		}
+		.file-label {
+			cursor: pointer;
+			padding: 10px 20px 10px;
+			margin-right: 10px;
+			border: 1px solid grey;
+			border-radius: 5px;
+			background-color: #e3e3e3;
+		}
+		.file-label:hover {
+			background-color: #d6d6d6;
+		}
+		label {
+			cursor: pointer;
+			margin-right: 10px;
+		}
+		input[type="file"] {
+			opacity: 0;
+			position: absolute;
+			z-index: -1;
+		}
+		input[type="radio"] {
+			-ms-transform: scale(1.5); /* IE */
+			-moz-transform: scale(1.5); /* FF */
+			-webkit-transform: scale(1.5); /* Safari and Chrome */
+			-o-transform: scale(1.5); /* Opera */
+			transform: scale(1.5);
+			cursor: pointer;
+			margin: 5px;
+		}
+		input[type="checkbox"]{
+			-ms-transform: scale(1.5); /* IE */
+			-moz-transform: scale(1.5); /* FF */
+			-webkit-transform: scale(1.5); /* Safari and Chrome */
+			-o-transform: scale(1.5); /* Opera */
+			transform: scale(1.5);
+			cursor: pointer;
+			margin: 5px;
+		}
+	</style>
+	<script>
+		function showFilename(obj) {
+			let name = obj.value.split("\\").pop();
+			document.getElementById("show-filename").textContent = name;
+		}
+	</script>
+	<body>
+		<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+		<div class="container">
+			<div class="container-item-left">
+				<div class="form-container">
+					<form id="uploadfile" method="post" enctype="multipart/form-data" target="dummyframe">
+						<div id="uploaditems" class="form-item">
+							<input type="file" id="file" name="file" onchange="showFilename(this)">
+							<label for="file" class="file-label">Choose zip file to upload</label>
+							<span id="show-filename">No File Selected</span>
+              <button class="btn" onclick="upload_file()">Submit</button>
+						</div>
+					</form>
+					<form id="options">
+						<div class="form-item">
+							<input type="checkbox" id="module" name="module" value="module" checked>
+							<label for="module">Module</label>
+							<input type="checkbox" id="babel" name="babel" value="babel">
+							<label for="module">Use Babel</label>
+							<input type="checkbox" id="e" name="no_file_based" value="no_file_based">
+							<label for="e">End to End Only</label>
+							<input type="checkbox" id="f" name="exit_when_found" value="1">
+							<label for="f">Exit When Detected</label>
+							<input type="checkbox" id="ra" name="run_all" value="run_all" checked>
+							<label for="ra">Run Exported Functions</label>
+						</div>
+					</form>
+          <div class="form-item">
+            <button class="btn" id="submit" onclick="start_check()">Submit</button>
+            <button class="btn" id="clear">Clear</button>
+            <label for="progress">Progress:</label>
+            <progress id="progress" value="0" max="100"> 0% </progress>
+          </div>
+        </div>
+        <div id="editor-container" class="editor-container">
+          <div id="editor-title" class="editor-title">Editor:</div>
+          <div id="editor" class="editor-display">
+          </div>
+          <script>
+            var editor = ace.edit("editor");
+            //editor.setTheme("ace/theme/tomorrow_night");
+            //editor.setTheme("ace/theme/terminal");
+            editor.setTheme("ace/theme/monokai");
+            editor.session.setMode("ace/mode/javascript");
+          </script>
+        </div>
+      </div>
+      <div class="container-item-right">
+        <div class="result-container">
+          <div class="result-title">Results: </div>
+          <ul class="legend">
+            <li><span class="blue"></span>Polluted Built-in Prototype</li>
+            <li><span class="red"></span>Value data flow</li>
+            <li><span class="green"></span>Key data flow</li>
+          </ul>
+          <div id="cy" class="result-display"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
